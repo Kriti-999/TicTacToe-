@@ -1,28 +1,30 @@
 package com.example.tictac;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+
 import android.widget.GridLayout;
+
 import android.widget.TextView;
-import android.widget.Toast;
+
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    int activePlayer=0;
+    int activePlayer=0,f=0;
     int[] gameState={2,2,2,2,2,2,2,2,2};
     int[][] winningState={{0,1,2},{3,4,5},{6,7,8},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
-    boolean active=true;
+    boolean active=true,draw=true;
     public void drop(View view){
-
+        f=0;
         ImageView counter= (ImageView) view;
         int state=Integer.parseInt(counter.getTag().toString());
-        if(gameState[state]==2 && active==true) {
+        if(gameState[state]==2 && active) {
             counter.setTranslationY(-1500);
-            Log.i("info",counter.getTag().toString());
+
 
             gameState[state] = activePlayer;
             if (activePlayer == 0) {
@@ -43,21 +45,36 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         winner = "YELLOW";
                     }
-
-                    Button playAgainButton=(Button) findViewById(R.id.button);
-                    TextView winnerTextView=findViewById((R.id.winngText));
-                    winnerTextView.setText(winner+" !");
+                    draw=false;
+                    Button playAgainButton=findViewById(R.id.button);
+                    TextView winnerTextView=findViewById((R.id.winningText));
+                    winnerTextView.setText(winner + " HAS WON ! 🎉");
                     playAgainButton.setVisibility(View.VISIBLE);
                     winnerTextView.setVisibility(View.VISIBLE);
+                    break;
                 }
+            }
+            for(int i=0;i<9;i++){
+                if(gameState[i]==2){
+                    f=1;
+                    break;
+                }
+            }
+            if(f==0 && draw){
+                Button playAgainButton=findViewById(R.id.button);
+                TextView winnerTextView=findViewById((R.id.winningText));
+                winnerTextView.setText("DRAW ✨");
+                playAgainButton.setVisibility(View.VISIBLE);
+                winnerTextView.setVisibility(View.VISIBLE);
             }
         }
     }
-    public  void playAgain(View view){
-        Button playAgainButton=(Button) findViewById(R.id.button);
-        TextView winnerTextView=findViewById((R.id.winngText));
-
-        GridLayout gridLayout=(GridLayout) findViewById(R.id.gridLayout);
+    public void playAgain(View view){
+        Button playAgainButton=findViewById(R.id.button);
+        TextView winnerTextView=findViewById((R.id.winningText));
+        playAgainButton.setVisibility(View.INVISIBLE);
+        winnerTextView.setVisibility(View.INVISIBLE);
+        androidx.gridlayout.widget.GridLayout gridLayout = findViewById(R.id.gridLayout);
         for(int i=0;i<gridLayout.getChildCount();i++){
             ImageView counter=(ImageView)gridLayout.getChildAt(i);
             counter.setImageDrawable(null);
@@ -73,9 +90,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button playAgainButton=findViewById(R.id.button);
+        TextView winnerTextView=findViewById((R.id.winningText));
+        playAgainButton.setVisibility(View.INVISIBLE);
+        winnerTextView.setVisibility(View.INVISIBLE);
     }
 }
